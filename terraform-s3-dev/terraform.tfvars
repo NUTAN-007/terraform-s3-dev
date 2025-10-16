@@ -1,0 +1,7 @@
+aws_region             = "us-east-1"
+bucket_name            = "my-new-bucket-name-np2710fin"
+bucket_owner           = "Nutan"
+aws_account_id         = "588436839216"
+iam_user               = "Nutan"
+logging_target_bucket  = "boto3-test-bucket-007"
+bucket_environment     = "Dev"
