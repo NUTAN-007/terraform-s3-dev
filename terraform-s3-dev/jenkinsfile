@@ -27,7 +27,7 @@ pipeline {
             steps {
                 sh '''
                 echo "==== Cleaning and Cloning Repo ===="
-                rm -rf /tmp/${GIT_REPO}
+                rm -rf /var/lib/jenkins/workspace/tf-s3-dev/*
                 git clone -b ${GIT_BRANCH} https://github.com/NUTAN-007/terraform-s3-dev.git 
                 '''
             }
