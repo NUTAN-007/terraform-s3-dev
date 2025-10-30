@@ -104,5 +104,5 @@ variable "logging_target_prefix" {
 
 variable "enable_import" {
   type = bool
-  default = false
+  default = true
 }
