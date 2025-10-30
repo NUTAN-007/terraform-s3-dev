@@ -51,7 +51,7 @@ pipeline {
             steps {
                 sh '''
                 echo "==== Terraform Validate Started ===="
-                cd ${TF_PATH}
+                cd ${GIT_REPO}/${TF_PATH}
                 terraform validate
                 echo "==== Terraform Validate Completed ===="
                 '''
@@ -63,7 +63,7 @@ pipeline {
             steps {
                 sh '''
                 echo "==== Terraform Plan Started ===="
-                cd ${TF_PATH}
+                cd ${GIT_REPO}/${TF_PATH}
                 terraform plan > terraform-plan-${timestamp}.log
                 echo "==== Terraform Plan Completed ===="
                 '''
@@ -75,7 +75,7 @@ pipeline {
             steps {
                 sh '''
                 echo "==== Terraform Apply Started ===="
-                cd ${TF_PATH}
+                cd ${GIT_REPO}/${TF_PATH}
                 terraform apply -auto-approve > terraform-apply-${timestamp}.log
                 echo "==== Terraform Apply Completed ===="
                 '''
@@ -87,7 +87,7 @@ pipeline {
             steps {
                 sh '''
                 echo "==== Destroying S3 Bucket ===="
-                cd ${TF_PATH}
+                cd ${GIT_REPO}/${TF_PATH}
                 terraform destroy -target aws_s3_bucket.create_bucket -auto-approve > destroy-bucket-${timestamp}.log
                 echo "==== S3 Bucket Destroyed ===="
                 '''
@@ -99,7 +99,7 @@ pipeline {
             steps {
                 sh '''
                 echo "==== Destroying S3 Folders ===="
-                cd ${TF_PATH}
+                cd ${GIT_REPO}/${TF_PATH}
                 terraform destroy -target aws_s3_object.create_folders -auto-approve > destroy-folders-${timestamp}.log
                 echo "==== S3 Folders Destroyed ===="
                 '''
