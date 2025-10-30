@@ -7,7 +7,7 @@ pipeline {
         GIT_BRANCH  = 'main'
         //GIT_LOC     = 'arch' 
         GIT_REPO    = 'terraform-s3-dev'
-        TF_PATH     = '/terraform-s3-dev'
+        TF_PATH     = 'terraform-s3-dev'
         AWS_DEFAULT_REGION = 'us-east-1'
         timestamp = sh(script: "date +%Y%m%d-%H%M%S", returnStdout: true).trim()
     }
