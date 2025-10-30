@@ -1,19 +1,20 @@
-resource "aws_s3_bucket" "my_bucket" {
+resource "aws_s3_bucket" "create_bucket" {
   bucket = var.bucket_name
   tags = {
     Name        = var.bucket_tag_name
     Environment = var.bucket_environment
     Owner       = var.bucket_owner
   }
+  force_destroy = true
 }
 
-resource "aws_s3_object" "my_folder" {
-  bucket = aws_s3_bucket.my_bucket.id
+resource "aws_s3_object" "create_folders" {
+  bucket = aws_s3_bucket.create_bucket.id
   key    = var.folder_name
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "bucket_config" {
-  bucket = aws_s3_bucket.my_bucket.id
+  bucket = aws_s3_bucket.create_bucket.id
 
   rule {
     id     = var.lifecycle_rule_id
@@ -42,7 +43,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "bucket_config" {
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = aws_s3_bucket.my_bucket.id
+  bucket = aws_s3_bucket.create_bucket.id
   policy = templatefile("${path.module}/bucket-policy.json", {
     aws_account_id = var.aws_account_id
     iam_user       = var.iam_user
@@ -51,7 +52,13 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 }
 
 resource "aws_s3_bucket_logging" "enable_logging" {
-  bucket        = aws_s3_bucket.my_bucket.id
+  bucket        = aws_s3_bucket.create_bucket.id
   target_bucket = var.logging_target_bucket
   target_prefix = var.logging_target_prefix
 }
+
+# resource "null_resource" "delete_folder1" {
+# provisioner "local-exec" {
+# command = "aws s3 rm s3://${var.bucket_name}/my-first-folder/ --recursive"
+# }
+# }

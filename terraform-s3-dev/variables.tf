@@ -100,3 +100,9 @@ variable "logging_target_prefix" {
   type        = string
   default     = "server-access-logs/"
 }
+
+
+variable "enable_import" {
+  type = bool
+  default = false
+}

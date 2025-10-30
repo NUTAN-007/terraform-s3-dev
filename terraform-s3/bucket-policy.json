@@ -1,0 +1,22 @@
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowAccessForSpecificUser",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::588436839216:user/Nutan"
+      },
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::my-unique-bucket-name-np2710",
+        "arn:aws:s3:::my-unique-bucket-name-np2710/*"
+      ]
+    }
+  ]
+}
