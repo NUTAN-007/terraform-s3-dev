@@ -39,6 +39,7 @@ pipeline {
                 sh '''
                 echo "==== Terraform Init Started ===="
                 cd ${TF_PATH}
+                ls
                 terraform init 
                 echo "==== Terraform Init Completed ===="
                 '''
