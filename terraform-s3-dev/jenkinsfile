@@ -114,13 +114,13 @@ pipeline {
             rm -rf /tmp/${GIT_REPO}
             '''
         }
-        success {
-            archiveArtifacts artifacts: "*.log"
-            sh 'rm -f *.log || true'
-        }
-        failure {
-            archiveArtifacts artifacts: "*.log"
-            sh 'rm -f *.log || true'
-        }
+        // success {
+        //     archiveArtifacts artifacts: "*.log"
+        //     sh 'rm -f *.log || true'
+        // }
+        // failure {
+        //     archiveArtifacts artifacts: "*.log"
+        //     sh 'rm -f *.log || true'
+        // }
     }
 }
