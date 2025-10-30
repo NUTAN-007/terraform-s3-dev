@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label 'default'
-    }
+    agent any
 
     environment {
         PLATFORM    = 'dev'
@@ -10,6 +8,7 @@ pipeline {
         //GIT_LOC     = 'arch' 
         GIT_REPO    = 'terraform-s3-dev'
         TF_PATH     = 'terraform-s3-dev'
+        AWS_CREDS = credentials('aws-creds')
         AWS_DEFAULT_REGION = 'us-east-1'
         timestamp = sh(script: "date +%Y%m%d-%H%M%S", returnStdout: true).trim()
     }
