@@ -39,7 +39,7 @@ pipeline {
                 sh '''
                 echo "==== Terraform Init Started ===="
                 cd ${TF_PATH}
-                terraform init -input=false
+                terraform init 
                 echo "==== Terraform Init Completed ===="
                 '''
             }
@@ -63,7 +63,7 @@ pipeline {
                 sh '''
                 echo "==== Terraform Plan Started ===="
                 cd ${TF_PATH}
-                terraform plan -input=false > terraform-plan-${timestamp}.log
+                terraform plan > terraform-plan-${timestamp}.log
                 echo "==== Terraform Plan Completed ===="
                 '''
             }
