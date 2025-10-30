@@ -1,0 +1,124 @@
+pipeline {
+    agent any
+
+    environment {
+        PLATFORM    = 'dev'
+        GIT_TOKEN   = credentials('arch-git-token')
+        GIT_BRANCH  = 'main'
+        //GIT_LOC     = 'arch' 
+        GIT_REPO    = 'terraform-s3-dev'
+        TF_PATH     = '/tmp/terraform-s3-dev'
+        AWS_DEFAULT_REGION = 'us-east-1'
+        timestamp = sh(script: "date +%Y%m%d-%H%M%S", returnStdout: true).trim()
+    }
+
+    parameters {
+        booleanParam(name: 'terraform_init', defaultValue: false, description: 'Run terraform init')
+        booleanParam(name: 'terraform_validate', defaultValue: false, description: 'Run terraform validate')
+        booleanParam(name: 'terraform_plan', defaultValue: false, description: 'Run terraform plan')
+        booleanParam(name: 'terraform_apply', defaultValue: false, description: 'Run terraform apply')
+        booleanParam(name: 'destroy_bucket', defaultValue: false, description: 'Destroy S3 bucket only')
+        booleanParam(name: 'destroy_folders', defaultValue: false, description: 'Destroy S3 folders only')
+    }
+
+    stages {
+
+        stage('prerequisite') {
+            steps {
+                sh '''
+                echo "==== Cleaning and Cloning Repo ===="
+                rm -rf /tmp/${GIT_REPO}
+                git clone -b ${GIT_BRANCH} https://github.com/NUTAN-007/terraform-s3-dev.git ${TF_PATH}
+                '''
+            }
+        }
+
+        stage('terraform-init') {
+            when { expression { params.terraform_init } }
+            steps {
+                sh '''
+                echo "==== Terraform Init Started ===="
+                cd ${TF_PATH}
+                terraform init -input=false
+                echo "==== Terraform Init Completed ===="
+                '''
+            }
+        }
+
+        stage('terraform-validate') {
+            when { expression { params.terraform_validate } }
+            steps {
+                sh '''
+                echo "==== Terraform Validate Started ===="
+                cd ${TF_PATH}
+                terraform validate
+                echo "==== Terraform Validate Completed ===="
+                '''
+            }
+        }
+
+        stage('terraform-plan') {
+            when { expression { params.terraform_plan } }
+            steps {
+                sh '''
+                echo "==== Terraform Plan Started ===="
+                cd ${TF_PATH}
+                terraform plan -input=false > terraform-plan-${timestamp}.log
+                echo "==== Terraform Plan Completed ===="
+                '''
+            }
+        }
+
+        stage('terraform-apply') {
+            when { expression { params.terraform_apply } }
+            steps {
+                sh '''
+                echo "==== Terraform Apply Started ===="
+                cd ${TF_PATH}
+                terraform apply -auto-approve > terraform-apply-${timestamp}.log
+                echo "==== Terraform Apply Completed ===="
+                '''
+            }
+        }
+
+        stage('destroy-bucket') {
+            when { expression { params.destroy_bucket } }
+            steps {
+                sh '''
+                echo "==== Destroying S3 Bucket ===="
+                cd ${TF_PATH}
+                terraform destroy -target aws_s3_bucket.create_bucket -auto-approve > destroy-bucket-${timestamp}.log
+                echo "==== S3 Bucket Destroyed ===="
+                '''
+            }
+        }
+
+        stage('destroy-folders') {
+            when { expression { params.destroy_folders } }
+            steps {
+                sh '''
+                echo "==== Destroying S3 Folders ===="
+                cd ${TF_PATH}
+                terraform destroy -target aws_s3_object.create_folders -auto-approve > destroy-folders-${timestamp}.log
+                echo "==== S3 Folders Destroyed ===="
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            sh '''
+            rm -rf /tmp/${GIT_REPO}
+            '''
+        }
+        success {
+            archiveArtifacts artifacts: "*.log"
+            sh 'rm -f *.log || true'
+        }
+        failure {
+            archiveArtifacts artifacts: "*.log"
+            sh 'rm -f *.log || true'
+        }
+    }
+}
