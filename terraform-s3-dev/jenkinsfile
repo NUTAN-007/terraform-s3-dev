@@ -115,7 +115,7 @@ pipeline {
                 echo "==== Destroying S3 Bucket ===="
                 cd ${GIT_REPO}/${TF_PATH}
                 
-                terraform destroy -target aws_s3_bucket.create_bucket -auto-approve > destroy-bucket-${timestamp}.log
+                terraform destroy -target aws_s3_bucket.create_bucket -auto-approve 
                 echo "==== S3 Bucket Destroyed ===="
                 '''
             }
@@ -127,7 +127,7 @@ pipeline {
                 sh '''
                 echo "==== Destroying S3 Folders ===="
                 cd ${GIT_REPO}/${TF_PATH}
-                terraform apply -auto-approve -target=null_resource.delete_folder1 
+                terraform apply -auto-approve -target=null_resource.delete_folder1 > delete-folders-${timestamp}.log
                 echo "==== S3 Folders Destroyed ===="
                 '''
             }
