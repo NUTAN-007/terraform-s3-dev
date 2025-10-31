@@ -33,7 +33,7 @@ pipeline {
             steps {
                 sh '''
                 echo "==== Cleaning and Cloning Repo ===="
-                rm -rf /vterraform state rm aws_s3_bucket_policy.bucket_policyar/lib/jenkins/workspace/tf-s3-dev/*
+                rm -rf /var/lib/jenkins/workspace/tf-s3-dev/*
                 git clone https://github.com/NUTAN-007/terraform-s3-dev.git 
                 '''
             }
