@@ -127,7 +127,7 @@ pipeline {
                 sh '''
                 echo "==== Destroying S3 Folders ===="
                 cd ${GIT_REPO}/${TF_PATH}
-                terraform apply -auto-approve -target=null_resource.delete_folder1 > delete-folders-${timestamp}.log
+                terraform apply -auto-approve -target=null_resource.delete_folder1 
                 echo "==== S3 Folders Destroyed ===="
                 '''
             }
