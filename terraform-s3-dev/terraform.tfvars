@@ -1,5 +1,5 @@
 aws_region             = "us-east-1"
-bucket_name            = "my-test2-bucket-np2710"
+bucket_name            = "my-test22-bucket-np2710"
 bucket_owner           = "admin"
 aws_account_id         = "291258553091"
 iam_user               = "admin"
