@@ -18,14 +18,13 @@ pipeline {
         booleanParam(name: 'terraform_validate', defaultValue: false, description: 'Run terraform validate')
         booleanParam(name: 'terraform_plan', defaultValue: false, description: 'Run terraform plan')
         booleanParam(name: 'terraform_apply', defaultValue: false, description: 'Run terraform apply')
-        booleanParam(name: 'destroy_bucket', defaultValue: false, description: 'Destroy S3 bucket only')
-        booleanParam(name: 'destroy_folders', defaultValue: false, description: 'Destroy S3 folders only')
         booleanParam(name: 'TARGET_BUCKET', defaultValue: false, description: 'aws_s3_bucket.create_bucket')
         booleanParam(name: 'TARGET_FOLDERS', defaultValue: false, description: 'aws_s3_object.create_folders')
         booleanParam(name: 'TARGET_LIFECYCLE', defaultValue: false, description: 'aws_s3_bucket_lifecycle_configuration.bucket_config')
         booleanParam(name: 'TARGET_POLICY', defaultValue: false, description: 'aws_s3_bucket_policy.bucket_policy')
         booleanParam(name: 'TARGET_LOGGING', defaultValue: false, description: 'aws_s3_bucket_logging.bucket_logging')
-
+        booleanParam(name: 'destroy_bucket', defaultValue: false, description: 'Destroy S3 bucket only')
+        booleanParam(name: 'destroy_folders', defaultValue: false, description: 'Destroy S3 folders only')
     }
 
     stages {
