@@ -57,8 +57,8 @@ resource "aws_s3_bucket_logging" "enable_logging" {
   target_prefix = var.logging_target_prefix
 }
 
-# resource "null_resource" "delete_folder1" {
-# provisioner "local-exec" {
-# command = "aws s3 rm s3://${var.bucket_name}/my-first-folder/ --recursive"
-# }
-# }
+resource "null_resource" "delete_folder1" {
+provisioner "local-exec" {
+command = "aws s3 rm s3://${var.bucket_name}/my-first-folder/ --recursive"
+}
+}

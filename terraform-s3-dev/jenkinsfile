@@ -20,18 +20,12 @@ pipeline {
         booleanParam(name: 'terraform_apply', defaultValue: false, description: 'Run terraform apply')
         booleanParam(name: 'destroy_bucket', defaultValue: false, description: 'Destroy S3 bucket only')
         booleanParam(name: 'destroy_folders', defaultValue: false, description: 'Destroy S3 folders only')
-        choice(
-        name: 'TARGET_RESOURCES',
-        choices: [
-            '',
-            'aws_s3_bucket.create_bucket',
-            'aws_s3_object.create_folders',
-            'aws_s3_bucket_lifecycle_configuration.bucket_config',
-            'aws_s3_bucket_policy.bucket_policy',
-            'aws_s3_bucket_logging.bucket_logging.enable_logging'
-        ],
-        description: 'Select specific Terraform targets (leave blank for full apply)'
-        )
+        booleanParam(name: 'TARGET_BUCKET', defaultValue: false, description: 'aws_s3_bucket.create_bucket')
+        booleanParam(name: 'TARGET_FOLDERS', defaultValue: false, description: 'aws_s3_object.create_folders')
+        booleanParam(name: 'TARGET_LIFECYCLE', defaultValue: false, description: 'aws_s3_bucket_lifecycle_configuration.bucket_config')
+        booleanParam(name: 'TARGET_POLICY', defaultValue: false, description: 'aws_s3_bucket_policy.bucket_policy')
+        booleanParam(name: 'TARGET_LOGGING', defaultValue: false, description: 'aws_s3_bucket_logging.bucket_logging')
+
     }
 
     stages {
@@ -87,19 +81,31 @@ pipeline {
             when { expression { params.terraform_apply } }
             steps {
                 script {
-                def targetArgs = ""
-                if (params.TARGET_RESOURCES?.trim()) {
-                def targets = params.TARGET_RESOURCES.split(',')
-                targetArgs = targets.collect { "-target=${it.trim()}" }.join(' ')
+                    def targets = []
+                    if (params.TARGET_BUCKET) {
+                        targets.add("-target=aws_s3_bucket.create_bucket")
+                    }
+                    if (params.TARGET_FOLDERS) {
+                        targets.add("-target=aws_s3_object.create_folders")
+                    }
+                    if (params.TARGET_LIFECYCLE) {
+                        targets.add("-target=aws_s3_bucket_lifecycle_configuration.bucket_config")
+                    }
+                    if (params.TARGET_POLICY) {
+                        targets.add("-target=aws_s3_bucket_policy.bucket_policy")
+                    }
+                    if (params.TARGET_LOGGING) {
+                        targets.add("-target=aws_s3_bucket_logging.bucket_logging.enable_logging")
+                    }
+                    def targetArgs = targets.join(' ')
+                    sh """
+                    echo "==== Terraform Apply Started ===="
+                    cd ${GIT_REPO}/${TF_PATH}
+                    terraform apply -auto-approve ${targetArgs} > terraform-apply-${timestamp}.log
+                    echo "==== Terraform Apply Completed ===="
+                    """
                 }
-                sh """
-                echo "==== Terraform Apply Started ===="
-                cd ${GIT_REPO}/${TF_PATH}
-                terraform apply -auto-approve ${targetArgs} > terraform-apply-${timestamp}.log
-                echo "==== Terraform Apply Completed ===="
-                """
-                }
-             }
+            }
         }
 
 
