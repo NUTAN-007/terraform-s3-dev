@@ -23,6 +23,7 @@ pipeline {
         choice(
         name: 'TARGET_RESOURCES',
         choices: [
+            '',
             'aws_s3_bucket.create_bucket',
             'aws_s3_object.create_folders',
             'aws_s3_bucket_lifecycle_configuration.bucket_config',
