@@ -20,6 +20,16 @@ pipeline {
         booleanParam(name: 'terraform_apply', defaultValue: false, description: 'Run terraform apply')
         booleanParam(name: 'destroy_bucket', defaultValue: false, description: 'Destroy S3 bucket only')
         booleanParam(name: 'destroy_folders', defaultValue: false, description: 'Destroy S3 folders only')
+        choice(
+        name: 'TARGET_RESOURCES',
+        choices: [
+            '',
+            'aws_s3_bucket.create_bucket',
+            'aws_s3_object.create_folders',
+            'aws_s3_bucket.create_bucket,aws_s3_object.create_folders'
+        ],
+        description: 'Select specific Terraform targets (leave blank for full apply)'
+        )
     }
 
     stages {
