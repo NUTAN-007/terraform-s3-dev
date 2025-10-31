@@ -22,7 +22,7 @@ pipeline {
         booleanParam(name: 'TARGET_FOLDERS', defaultValue: false, description: 'aws_s3_object.create_folders')
         booleanParam(name: 'TARGET_LIFECYCLE', defaultValue: false, description: 'aws_s3_bucket_lifecycle_configuration.bucket_config')
         booleanParam(name: 'TARGET_POLICY', defaultValue: false, description: 'aws_s3_bucket_policy.bucket_policy')
-        booleanParam(name: 'TARGET_LOGGING', defaultValue: false, description: 'aws_s3_bucket_logging.bucket_logging')
+        booleanParam(name: 'TARGET_LOGGING', defaultValue: false, description: 'aws_s3_bucket_logging.enable_logging')
         booleanParam(name: 'destroy_bucket', defaultValue: false, description: 'Destroy S3 bucket only')
         booleanParam(name: 'destroy_folders', defaultValue: false, description: 'Destroy S3 folders only')
     }
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 sh '''
                 echo "==== Cleaning and Cloning Repo ===="
-                rm -rf /var/lib/jenkins/workspace/tf-s3-dev/*
+                rm -rf /vterraform state rm aws_s3_bucket_policy.bucket_policyar/lib/jenkins/workspace/tf-s3-dev/*
                 git clone https://github.com/NUTAN-007/terraform-s3-dev.git 
                 '''
             }
