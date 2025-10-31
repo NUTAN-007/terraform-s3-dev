@@ -94,7 +94,7 @@ pipeline {
                         targets.add("-target=aws_s3_bucket_policy.bucket_policy")
                     }
                     if (params.TARGET_LOGGING) {
-                        targets.add("-target=aws_s3_bucket_logging.bucket_logging.enable_logging")
+                        targets.add("-target=aws_s3_bucket_logging.enable_logging")
                     }
                     def targetArgs = targets.join(' ')
                     sh """
